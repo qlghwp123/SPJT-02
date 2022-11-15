@@ -1,5 +1,5 @@
 from django.db import models
-from .choice import ALLERGY_CHOICES
+from .choice import ALLERGY_CHOICES, SHIP_CHOICES
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill, Thumbnail
 import os
@@ -38,11 +38,16 @@ class Product(models.Model):
     description = description = models.TextField(blank=True)
     stock = models.IntegerField()
     sales_rate = models.PositiveIntegerField()
-
+    ship_type = models.CharField(max_length=10, choices=SHIP_CHOICES)
     allergy = MultiSelectField(
         choices=ALLERGY_CHOICES,
     )
+    is_crawl = models.BooleanField(default=False)
+    crawl_produt_thum_img = models.TextField(blank=True)
+    crawl_produt_detail_img = models.TextField(blank=True)
+    crawl_produt_desc_img = models.TextField(blank=True)
     # wishlist=models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='wishlist_product')
+
     def delete(self, *args, **kargs):
         if self.produt_thum_img:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.produt_thum_img.path))
